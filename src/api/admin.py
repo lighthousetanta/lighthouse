@@ -1,3 +1,7 @@
 from django.contrib import admin
+from .models import MissingPerson, Image, UnKnownMissingPerson, KnownMissingPerson
 
-# Register your models here.
+admin.site.register(MissingPerson)
+admin.site.register(UnKnownMissingPerson)
+admin.site.register(KnownMissingPerson)
+admin.site.register(Image)

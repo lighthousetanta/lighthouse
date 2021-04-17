@@ -1,13 +1,14 @@
 from rest_framework import serializers
-from .models import MissingPerson, ContactPerson
+from .models import KnownMissingPerson
 
-class MissingPersonSerializer(serializers.ModelSerializer):
+
+class KnownMissingPersonSerializer(serializers.ModelSerializer):
     class Meta:
-        model = MissingPerson
-        fields ='__all__'
+        model = KnownMissingPerson
+        fields = "__all__"
 
 
-class ContactPersonSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ContactPerson
-        fields ='__all__'
+# class ContactPersonSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = ContactPerson
+#         fields ='__all__'
