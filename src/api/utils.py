@@ -1,6 +1,8 @@
 import jwt
 from rest_framework.exceptions import AuthenticationFailed
 from .models import User
+import datetime
+import json
 
 
 def get_user(request):
@@ -18,3 +20,28 @@ def get_user(request):
     user = User.objects.filter(id=user_id).first()
 
     return user
+
+
+def generate_token(request):
+    body_unicode = request.body.decode("utf-8")
+    body = json.loads(body_unicode)
+    email = body["email"]
+    password = body["password"]
+
+    user = User.objects.filter(email=email).first()
+
+    if user is None:
+        raise AuthenticationFailed("User not found!")
+
+    if not user.check_password(password):
+        raise AuthenticationFailed("Incorrect password!")
+
+    payload = {
+        "id": user.id,
+        "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
+        "iat": datetime.datetime.utcnow(),
+    }
+
+    token = jwt.encode(payload, "secret", algorithm="HS256")
+
+    return token

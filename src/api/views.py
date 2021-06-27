@@ -1,19 +1,10 @@
 from django.views.decorators.csrf import csrf_exempt
 
 from rest_framework.response import Response
-from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.views import APIView
 
-from .viewsets.missing import *
-from .viewsets.search import *
 from .serializers import *
-from .utils import get_user
-from .models import KnownMissingPerson
-
-import jwt
-import datetime
-
-from django.http import JsonResponse
+from .viewsets import *
 
 
 @csrf_exempt
@@ -36,10 +27,8 @@ def find(request):
 
 @csrf_exempt
 def profile(request):
-    user = get_user(request)
-    reported_cases = KnownMissingPerson.objects.filter(contactPerson=user).all()
-    reported_cases = [case.serialize() for case in reported_cases]
-    return JsonResponse(reported_cases, safe=False)
+    view_set = ProfileViewSet(request)
+    return view_set.respond()
 
 
 class Register(APIView):
@@ -47,47 +36,24 @@ class Register(APIView):
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(serializer.data)
-
-
-class LoginView(APIView):
-    def post(self, request):
-        email = request.data["email"]
-        password = request.data["password"]
-
-        user = User.objects.filter(email=email).first()
-
-        if user is None:
-            raise AuthenticationFailed("User not found!")
-
-        if not user.check_password(password):
-            raise AuthenticationFailed("Incorrect password!")
-
-        payload = {
-            "id": user.id,
-            "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
-            "iat": datetime.datetime.utcnow(),
-        }
-
-        token = jwt.encode(payload, "secret", algorithm="HS256")
-
-        response = Response()
-
+        token = generate_token(request)
+        response = Response(serializer.data)
         response.set_cookie(key="jwt", value=token, httponly=True)
-        response.data = {"jwt": token}
         return response
 
 
-class UserView(APIView):
-    def get(self, request):
-        user = get_user(request)
-        serializer = UserSerializer(user)
-        return Response(serializer.data)
+@csrf_exempt
+def login(request):
+    view_set = LoginViewSet(request)
+    return view_set.respond()
 
 
-class LogoutView(APIView):
-    def post(self, request):
-        response = Response()
-        response.delete_cookie("jwt")
-        response.data = {"message": "success"}
-        return response
+def user(request):
+    view_set = UserViewSet(request)
+    return view_set.respond()
+
+
+@csrf_exempt
+def logout(request):
+    view_set = LogoutViewSet(request)
+    return view_set.respond()
