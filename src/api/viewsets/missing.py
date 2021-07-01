@@ -3,6 +3,9 @@ from django.http import JsonResponse
 from django.db import IntegrityError
 from .base import BaseViewSet
 from ..utils import get_user
+from ..classifier.index import SearchIndex
+from ..classifier.classifier import Model
+import threading
 
 
 class MissingViewSet(BaseViewSet):
@@ -21,9 +24,17 @@ class MissingViewSet(BaseViewSet):
                 contactPerson=user, name=name, image=image
             )
             person.save()
+            threading.Thread(target=self.save_embedding, args=[person]).start()
             return JsonResponse(person.serialize(), status=201)
         except IntegrityError:
             return JsonResponse({"message": "Database integrity error"}, status=500)
+
+    def save_embedding(self, person):
+        embedding = Model().get_embedding(person.image)
+        person.embedding = str(embedding)
+        person.save()
+        SearchIndex().push(embedding, person.id)
+        print("posted")
 
     @staticmethod
     def get():
@@ -49,6 +60,7 @@ class MissingIdViewSet(BaseViewSet):
     def delete(self):
         person = models.KnownMissingPerson.objects.get(id=self.pk)
         person.delete()
+        SearchIndex().delete(self.pk)
         return JsonResponse({"message": "deleted"}, status=204)
 
     def patch(self):

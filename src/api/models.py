@@ -42,24 +42,24 @@ class KnownMissingPersonImages(models.Model):
         on_delete=models.CASCADE,
         related_name="knownMissingPersonsImages",
     )
-    imgPath = models.ImageField(upload_to="knownMissingPersonsImages")
+    image = models.ImageField(upload_to="knownMissingPersonsImages")
 
     def __str__(self):
         return f"image for {self.missingPerson}"
 
     def serialize(self):
-        return {"id": self.id, "url": self.imgPath.url}
+        return {"id": self.id, "url": self.image.url}
 
 
-class UserSeeKnownMissingPerson(models.Model):
+class KnownMissingPersonTrackRecord(models.Model):
     missingPerson = models.ForeignKey(
         KnownMissingPerson,
         on_delete=models.CASCADE,
         related_name="foundKnownMissingPersonsImages",
     )
-    imgPath = models.ImageField(upload_to="unknownMissingPersonsImages")
-    imgEmbedding = models.JSONField(blank=True, null=True)
-    takenBy = models.ForeignKey(
+    image = models.ImageField(upload_to="unknownMissingPersonsImages")
+    embedding = models.JSONField(blank=True, null=True)
+    taken_by = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name="knownMissingPersonsImagesTaker",
@@ -67,22 +67,22 @@ class UserSeeKnownMissingPerson(models.Model):
     )
 
     def __str__(self):
-        return f"image for {self.missingPerson} taken by {self.takenBy}"
+        return f"image for {self.missingPerson} taken by {self.taken_by}"
 
 
 class UnKnownMissingPerson(models.Model):
     pass
 
 
-class UserSeeUnknownMissingPerson(models.Model):
+class UnknownMissingPersonTrackRecord(models.Model):
     missingPerson = models.ForeignKey(
         UnKnownMissingPerson,
         on_delete=models.CASCADE,
         related_name="foundUnknownMissingPersonsImages",
     )
-    imgPath = models.ImageField(upload_to="unknownMissingPersonsImages")
-    imgEmbedding = models.JSONField(blank=True, null=True)
-    takenBy = models.ForeignKey(
+    image = models.ImageField(upload_to="unknownMissingPersonsImages")
+    embedding = models.JSONField(blank=True, null=True)
+    taken_by = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name="unknownMissingPersonsImagesTaker",
@@ -90,4 +90,9 @@ class UserSeeUnknownMissingPerson(models.Model):
     )
 
     def __str__(self):
-        return f"image for Unknown Missing person taken by {self.takenBy}"
+        return f"image for Unknown Missing person taken by {self.taken_by}"
+
+
+class Quereies(models.Model):
+    image = models.ImageField(upload_to="Queries")
+    result = models.JSONField(blank=True, null=True)

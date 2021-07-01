@@ -10,5 +10,6 @@ urlpatterns = [
     path("login", views.login, name="login"),
     path("user", views.user, name="user"),
     path("logout", views.logout, name="logout"),
-    path("profile", views.profile, name="logout"),
+    path("profile", views.profile, name="profile"),
+    path("result", views.get_search_result, name="result"),
 ]

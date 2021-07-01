@@ -1,7 +1,6 @@
 from ..models import *
 from ..utils import *
 from django.http import JsonResponse
-from django.db import IntegrityError
 from .base import BaseViewSet
 
 

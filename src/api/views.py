@@ -57,3 +57,9 @@ def user(request):
 def logout(request):
     view_set = LogoutViewSet(request)
     return view_set.respond()
+
+
+@csrf_exempt
+def get_search_result(request):
+    view_set = ResultViewSet(request)
+    return view_set.respond()
