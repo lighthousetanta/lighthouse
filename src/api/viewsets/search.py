@@ -57,13 +57,12 @@ class ResultViewSet(BaseViewSet):
     def __init__(self, request):
         super().__init__(request)
         self.request = request
+        self.id = id
         self.verbs = {"GET": self.get}
 
     def get(self):
         response = []
-        body_unicode = self.request.body.decode("utf-8")
-        body = json.loads(body_unicode)
-        query_id = body["id"]
+        query_id = self.request.GET.get("id", "")
         query = Quereies.objects.get(id=query_id)
         if not query.result:
             return JsonResponse({"message": "try again"})

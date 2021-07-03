@@ -2,15 +2,30 @@ from ..models import *
 from ..utils import *
 from django.http import JsonResponse
 from .base import BaseViewSet
+from rest_framework.exceptions import AuthenticationFailed
+import json
+from django.db import IntegrityError
 
 
 class RegisterViewSet(BaseViewSet):
-    def __int__(self, request):
+    def __init__(self, request):
         super().__init__(request)
         self.verbs = {"POST": self.post}
 
     def post(self):
-        pass
+        try:
+            body_unicode = self.request.body.decode("utf-8")
+            body = json.loads(body_unicode)
+            password = body.pop("password", None)
+            user = User(**body)
+            user.set_password(password)
+            user.save()
+            token, user = generate_token(self.request)
+            response = JsonResponse(user.serialize())
+            response.set_cookie(key="jwt", value=token, httponly=True)
+            return response
+        except IntegrityError as e:
+            return JsonResponse({"message": "username taken"})
 
 
 class LoginViewSet(BaseViewSet):
@@ -19,10 +34,13 @@ class LoginViewSet(BaseViewSet):
         self.verbs = {"POST": self.post}
 
     def post(self):
-        token = generate_token(self.request)
-        response = JsonResponse({})
-        response.set_cookie(key="jwt", value=token, httponly=True)
-        return response
+        try:
+            token, user = generate_token(self.request)
+            response = JsonResponse(user.serialize())
+            response.set_cookie(key="jwt", value=token, httponly=True)
+            return response
+        except AuthenticationFailed as e:
+            return JsonResponse({"message": str(e)})
 
 
 class ProfileViewSet(BaseViewSet):

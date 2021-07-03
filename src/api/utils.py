@@ -44,4 +44,4 @@ def generate_token(request):
 
     token = jwt.encode(payload, "secret", algorithm="HS256")
 
-    return token
+    return token, user

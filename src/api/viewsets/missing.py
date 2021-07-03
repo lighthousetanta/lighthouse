@@ -6,6 +6,8 @@ from ..utils import get_user
 from ..classifier.index import SearchIndex
 from ..classifier.classifier import Model
 import threading
+from django.core.exceptions import ObjectDoesNotExist
+from django.utils.datastructures import MultiValueDictKeyError
 
 
 class MissingViewSet(BaseViewSet):
@@ -26,7 +28,8 @@ class MissingViewSet(BaseViewSet):
             person.save()
             threading.Thread(target=self.save_embedding, args=[person]).start()
             return JsonResponse(person.serialize(), status=201)
-        except IntegrityError:
+        except IntegrityError as e:
+            print(str(e))
             return JsonResponse({"message": "Database integrity error"}, status=500)
 
     def save_embedding(self, person):
@@ -54,14 +57,19 @@ class MissingIdViewSet(BaseViewSet):
             person = models.KnownMissingPerson.objects.get(id=self.pk)
             person = person.serialize()
             return JsonResponse(person, safe=False)
-        except IntegrityError:
-            return JsonResponse({"message": "Database integrity error"}, status=500)
+        except ObjectDoesNotExist as e:
+            print(str(e))
+            return JsonResponse({"message": "User Does not exist"}, status=500)
 
     def delete(self):
-        person = models.KnownMissingPerson.objects.get(id=self.pk)
-        person.delete()
-        SearchIndex().delete(self.pk)
-        return JsonResponse({"message": "deleted"}, status=204)
+        try:
+            person = models.KnownMissingPerson.objects.get(id=self.pk)
+            person.delete()
+            SearchIndex().delete(self.pk)
+            return JsonResponse({"message": "deleted"}, status=204)
+        except ObjectDoesNotExist as e:
+            print(str(e))
+            return JsonResponse({"message": "User Does not exist"}, status=204)
 
     def patch(self):
         person = models.KnownMissingPerson.objects.get(id=self.pk)

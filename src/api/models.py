@@ -33,6 +33,7 @@ class KnownMissingPerson(models.Model):
             "id": self.id,
             "name": self.name,
             "image": self.image.url,
+            "reported_by": self.contactPerson.serialize(),
         }
 
 
