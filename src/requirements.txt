@@ -1,0 +1,10 @@
+Django
+djangorestframework
+Pillow
+django_heroku
+gunicorn
+django-storages[dropbox]
+PyJWT
+django-cors-headers
+elasticsearch
+deepface
