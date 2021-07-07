@@ -131,13 +131,13 @@ STATIC_URL = "/static/"
 
 
 django_heroku.settings(locals())
-if platform.system() != "Windows":
-    DEFAULT_FILE_STORAGE = "storages.backends.dropbox.DropBoxStorage"
-DROPBOX_OAUTH2_TOKEN = (
-    "JxWv6R1aCCwAAAAAAAAAAVV3HsxSvIwTqz10rzC-AYTf-OXuvZpJLBdPY4TvuEGi"
-)
 
-
+DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+AWS_STORAGE_BUCKET_NAME = "lighthousetanta"
+AWS_ACCESS_KEY_ID = "AKIAWZQZSIAL2FVJO5IC"
+AWS_SECRET_ACCESS_KEY = "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"
+AWS_QUERYSTRING_EXPIRE = "100"
+AWS_QUERYSTRING_AUTH = False
 AUTH_USER_MODEL = "api.User"
 
 CORS_ORIGIN_ALLOW_ALL = True

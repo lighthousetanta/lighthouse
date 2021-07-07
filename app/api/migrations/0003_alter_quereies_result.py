@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0002_quereies'),
+        ("api", "0002_quereies"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='quereies',
-            name='result',
+            model_name="quereies",
+            name="result",
             field=models.JSONField(blank=True, null=True),
         ),
     ]

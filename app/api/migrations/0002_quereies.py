@@ -6,16 +6,24 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0001_initial'),
+        ("api", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Quereies',
+            name="Quereies",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('image', models.ImageField(upload_to='Queries')),
-                ('result', models.CharField(blank=True, max_length=50, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("image", models.ImageField(upload_to="Queries")),
+                ("result", models.CharField(blank=True, max_length=50, null=True)),
             ],
         ),
     ]

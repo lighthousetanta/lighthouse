@@ -7,7 +7,6 @@ from ..classifier.index import SearchIndex
 from ..classifier.classifier import Model
 import threading
 from django.core.exceptions import ObjectDoesNotExist
-from django.utils.datastructures import MultiValueDictKeyError
 
 
 class MissingViewSet(BaseViewSet):
@@ -62,9 +61,9 @@ class MissingIdViewSet(BaseViewSet):
             return JsonResponse({"message": "User Does not exist"}, status=500)
 
     def delete(self):
+        person = models.KnownMissingPerson.objects.get(id=self.pk)
+        person.delete()
         try:
-            person = models.KnownMissingPerson.objects.get(id=self.pk)
-            person.delete()
             SearchIndex().delete(self.pk)
             return JsonResponse({"message": "deleted"}, status=204)
         except ObjectDoesNotExist as e:

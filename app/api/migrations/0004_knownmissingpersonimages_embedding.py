@@ -6,14 +6,14 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0003_alter_quereies_result'),
+        ("api", "0003_alter_quereies_result"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='knownmissingpersonimages',
-            name='embedding',
-            field=models.CharField(default='0', max_length=1543),
+            model_name="knownmissingpersonimages",
+            name="embedding",
+            field=models.CharField(default="0", max_length=1543),
             preserve_default=False,
         ),
     ]

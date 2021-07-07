@@ -20,11 +20,8 @@ class Model(metaclass=Singleton):
         return self.model.predict(preprocessed_face)[0]
 
     def get_image_from_url(self, url):
-        if platform.system() != "Windows":
-            urllib.request.urlretrieve(
-                url,
-                "image.jpg",
-            )
-            return "image.jpg"
-        else:
-            return "." + url
+        urllib.request.urlretrieve(
+            url,
+            "image.jpg",
+        )
+        return "image.jpg"

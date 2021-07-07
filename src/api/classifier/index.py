@@ -29,6 +29,11 @@ class SearchIndex(metaclass=Singleton):
     def delete(self, index):
         self.es.delete(index="final_face_recognition", id=index)
 
+    def flush(self):
+        self.es.delete_by_query(
+            index="final_face_recognition", body={"query": {"match_all": {}}}
+        )
+
     def search(self, emb, size):
         """
         size : # nearest neighbours

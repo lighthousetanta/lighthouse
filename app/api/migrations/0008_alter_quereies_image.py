@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0007_alter_quereies_image'),
+        ("api", "0007_alter_quereies_image"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='quereies',
-            name='image',
-            field=models.ImageField(upload_to='api/classifier'),
+            model_name="quereies",
+            name="image",
+            field=models.ImageField(upload_to="api/classifier"),
         ),
     ]
