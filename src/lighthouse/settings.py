@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import django_heroku
 from pathlib import Path
-
+from decouple import config
 import platform
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -22,7 +22,7 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "hybf33qcqz^6w_6=h&*#lu&7c6^9oo76nnp8nyukjeb3kh=53q"
+SECRET_KEY = config("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -134,8 +134,8 @@ django_heroku.settings(locals())
 
 DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 AWS_STORAGE_BUCKET_NAME = "lighthousetanta"
-AWS_ACCESS_KEY_ID = "AKIAWZQZSIAL2FVJO5IC"
-AWS_SECRET_ACCESS_KEY = "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"
+AWS_ACCESS_KEY_ID = config("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = config("AWS_SECRET_ACCESS_KEY")
 AWS_QUERYSTRING_EXPIRE = "100"
 AWS_QUERYSTRING_AUTH = False
 AUTH_USER_MODEL = "api.User"
